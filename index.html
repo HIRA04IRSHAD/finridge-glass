@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en" class="anim">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinRidge — Unlock your financial potential</title>
+<meta name="description" content="FinRidge Commercial Brokers: credit cards and personal finance from leading Islamic and conventional banks in the UAE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=Instrument+Serif:ital@1&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<style>
+:root{
+  --u:calc(100vw/1440);
+  /* FinRidge logo palette */
+  --navy:#1B3A6B; --navy-dark:#14284B; --navy-hover:#24497F;
+  --green:#3BA845; --green-light:#6CC04A; --green-hover:#2F8A38;
+  --mint:#EAF6EC;
+  /* dark-scene tokens derived from it */
+  --ink:#f4f8ff; --ink-2:rgba(226,236,252,.74); --ink-3:rgba(206,220,244,.52);
+  --page:#0b1830; --line:rgba(170,200,250,.15);
+  --glass-hi:linear-gradient(160deg,rgba(90,150,230,.2),rgba(40,80,150,.14));
+  --sans:"Inter Tight",system-ui,sans-serif; --serif:"Instrument Serif",Georgia,serif; --mono:"Fira Code",ui-monospace,monospace;
+}
+@media (max-width:820px){:root{--u:calc(100vw/390)}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--page)}
+body{color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;border:0;background:transparent;cursor:pointer}
+.U{--x:1}
+/* ---------- scene ---------- */
+#scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#scene>*{position:absolute;inset:0}
+#day{background:url("https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261104_151305_25ef1f45-0886-491c-a7a8-81e296402d5a.png&w=2400&q=85") center/cover;will-change:opacity,transform}
+#day video,#pondfx{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 1.2s ease}
+#day video{object-fit:cover}#day video.show{opacity:1}
+#pondfx{display:block}#pondfx.on{opacity:1}
+#violet{background:linear-gradient(180deg,#152c55 0%,#0f2244 50%,#0b1a36 100%);opacity:0}
+#night{background:url("https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261104_151304_3b7ab857-b4c2-4f5a-8d7f-e1ec429185a5.png&w=2400&q=85") center/cover;opacity:0}
+#night::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,24,48,.15) 0%,transparent 30%,rgba(11,24,48,.6) 58%,rgba(9,20,42,.94) 100%)}
+#koi{width:100%;height:100%;display:block}
+main{position:relative;z-index:1}
+/* ---------- nav ---------- */
+.nav{position:fixed;z-index:20;top:calc(24*var(--u));left:calc(36*var(--u));right:calc(32*var(--u));height:calc(52*var(--u));display:flex;align-items:center;justify-content:space-between;font-size:calc(16*var(--u))}
+.logo{display:inline-flex;align-items:center;background:#fff;border-radius:calc(11*var(--u));padding:calc(6*var(--u)) calc(12*var(--u));box-shadow:0 calc(8*var(--u)) calc(26*var(--u)) rgba(5,15,40,.35)}
+.logo img{height:calc(38*var(--u));width:auto;display:block}
+.menu{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:calc(4*var(--u));padding:calc(5*var(--u));border-radius:calc(12*var(--u));background:rgba(110,150,220,.26);border:1px solid rgba(200,220,255,.22);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);transition:background .4s}
+.nav.scrolled .menu{background:rgba(12,28,60,.6)}
+.menu a{display:flex;align-items:center;gap:calc(7*var(--u));padding:calc(10*var(--u)) calc(14*var(--u));border-radius:calc(8*var(--u));font-weight:500;transition:background .25s}
+.menu a:hover{background:rgba(255,255,255,.12)}
+.menu svg{width:calc(10*var(--u));height:calc(10*var(--u));opacity:.8}
+.right{display:flex;align-items:center;gap:calc(10*var(--u))}
+.right .plain{font-weight:500;padding:0 calc(14*var(--u))}
+.pill{display:inline-flex;align-items:center;height:calc(46*var(--u));padding:0 calc(17*var(--u));border-radius:calc(10*var(--u));font-weight:500;white-space:nowrap;transition:transform .25s,background .25s}
+.pill:hover{transform:translateY(-1px)}
+.pill.grey{background:rgba(110,150,210,.42);border:1px solid rgba(210,225,255,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pill.dark{background:var(--green);border:1px solid rgba(180,240,190,.25)}
+.pill.dark:hover{background:var(--green-hover)}
+/* ---------- shared ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;height:calc(49*var(--u));padding:0 calc(18*var(--u));border-radius:calc(11*var(--u));font-size:calc(16*var(--u));font-weight:500;white-space:nowrap;transition:transform .25s,box-shadow .3s,background .3s}
+.btn:hover{transform:translateY(-2px)}
+.btn.fill{background:var(--green);box-shadow:0 calc(8*var(--u)) calc(26*var(--u)) rgba(59,168,69,.35)}
+.btn.fill:hover{background:var(--green-hover);box-shadow:0 calc(10*var(--u)) calc(34*var(--u)) rgba(59,168,69,.5)}
+.btn.ghost{border:1px solid rgba(226,236,255,.42);background:rgba(255,255,255,.03)}
+.btn.ghost:hover{background:rgba(255,255,255,.1)}
+.btn.white{background:#fff;color:var(--navy-dark)}
+.btn.dk{background:var(--navy-dark);border:1px solid rgba(160,190,255,.2)}
+.ac{color:var(--green-light)}
+.sf{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:0}
+.lede{font-size:calc(18*var(--u));line-height:1.55;color:var(--ink-2);letter-spacing:-.005em}
+.h2{font-weight:300;font-size:calc(52*var(--u));line-height:1.1;letter-spacing:-.028em}
+.glass{background:linear-gradient(160deg,rgba(80,140,230,.14),rgba(30,70,140,.08));border:1px solid rgba(190,215,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 calc(24*var(--u)) calc(60*var(--u)) rgba(3,10,30,.28);backdrop-filter:blur(22px) saturate(1.35);-webkit-backdrop-filter:blur(22px) saturate(1.35)}
+.chip{display:inline-flex;align-items:center;gap:calc(6*var(--u));height:calc(24*var(--u));padding:0 calc(9*var(--u));border-radius:calc(6*var(--u));font-family:var(--mono);font-size:calc(11*var(--u));letter-spacing:.02em;color:var(--ink-2);background:rgba(150,190,255,.1);border:1px solid rgba(170,200,255,.12);white-space:nowrap}
+.chip.up{color:#8ff0a0;background:rgba(108,192,74,.12);border-color:rgba(108,192,74,.22)}
+.chip.live::before,.dot::before{content:"";width:calc(6*var(--u));height:calc(6*var(--u));border-radius:50%;background:var(--green-light);box-shadow:0 0 calc(8*var(--u)) var(--green-light);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.tlink{display:inline-flex;align-items:center;gap:calc(10*var(--u));font-size:calc(16*var(--u));font-weight:500}
+.tlink svg{width:calc(16*var(--u));height:calc(16*var(--u));transition:transform .3s}
+.tlink:hover svg{transform:translateX(calc(4*var(--u)))}
+.ico{width:calc(24*var(--u));height:calc(24*var(--u));opacity:.85;display:grid;place-items:center}
+.ico svg{width:calc(22*var(--u));height:auto;stroke:#fff;stroke-width:1.3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.reveal{opacity:0;transform:translateY(calc(36*var(--u)));transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+html.anim [data-in]{opacity:0}
+/* ---------- hero ---------- */
+#hero{height:100vh;min-height:calc(900*var(--u));position:relative}
+#hero>*{position:absolute}
+.hl{left:calc(67*var(--u));top:calc(526*var(--u));font-weight:300;font-size:calc(74*var(--u));line-height:calc(68*var(--u));letter-spacing:-.025em}
+.hl>span{display:block;overflow:hidden;padding-bottom:calc(6*var(--u))}
+.hl>span>span{display:block}
+.sub{left:calc(67*var(--u));top:calc(684*var(--u));font-size:calc(20*var(--u));color:var(--ink-2);letter-spacing:-.005em}
+.hbtns{left:calc(67*var(--u));top:calc(742*var(--u));display:flex;gap:calc(11*var(--u))}
+.scard{left:calc(1202*var(--u));top:calc(703*var(--u));width:calc(193*var(--u));height:calc(152*var(--u));border-radius:calc(10*var(--u));padding:calc(16*var(--u)) calc(17*var(--u));background:linear-gradient(160deg,rgba(70,175,85,.74),rgba(45,140,62,.64));border:1px solid rgba(200,245,210,.3);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:calc(27*var(--u));line-height:1.18;letter-spacing:-.01em;display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .35s}
+.scard:hover{transform:translateY(calc(-4*var(--u)))}
+.scard svg{align-self:flex-end;width:calc(22*var(--u));height:calc(22*var(--u));stroke:#fff;stroke-width:1.6;fill:none;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(calc(5*var(--u)))}}
+/* ---------- about / studio ---------- */
+#about{text-align:center;padding:calc(300*var(--u)) calc(64*var(--u)) calc(150*var(--u))}
+#about .h2{max-width:calc(1240*var(--u));margin:calc(22*var(--u)) auto 0}
+#about .lede{max-width:calc(600*var(--u));margin:calc(22*var(--u)) auto 0}
+.row{display:flex;justify-content:center;gap:calc(10*var(--u));margin-top:calc(34*var(--u))}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);max-width:calc(1060*var(--u));margin:calc(72*var(--u)) auto 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats>div{padding:calc(24*var(--u)) calc(20*var(--u));text-align:left}
+.stats>div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font-weight:300;font-size:calc(40*var(--u));letter-spacing:-.03em;line-height:1}
+.stats span{display:block;font-size:calc(14*var(--u));color:var(--ink-3);line-height:1.4;margin-top:calc(10*var(--u))}
+.partners{display:flex;justify-content:center;flex-wrap:wrap;gap:calc(10*var(--u));margin-top:calc(28*var(--u))}
+/* dashboard */
+#dash{max-width:calc(1220*var(--u));margin:calc(80*var(--u)) auto 0;border-radius:calc(16*var(--u));background:linear-gradient(180deg,rgba(22,44,86,.88),rgba(14,30,62,.92));border:1px solid var(--line);box-shadow:0 calc(50*var(--u)) calc(140*var(--u)) rgba(2,8,26,.7),0 0 0 calc(7*var(--u)) rgba(120,170,255,.05),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;font-size:calc(13*var(--u));text-align:left;position:relative}
+#dash::before{content:"";position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(170,230,180,.7),transparent)}
+.dtop{height:calc(54*var(--u));padding:0 calc(18*var(--u));display:flex;align-items:center;gap:calc(16*var(--u));border-bottom:1px solid rgba(170,200,255,.09)}
+.mini{display:flex;align-items:center;background:#fff;border-radius:calc(6*var(--u));padding:calc(3*var(--u)) calc(7*var(--u))}
+.mini img{height:calc(22*var(--u));display:block}
+.crumb{color:var(--ink-3)}.crumb b{color:var(--ink);font-weight:500}
+.sp{flex:1}
+.search{width:calc(230*var(--u));height:calc(32*var(--u));border-radius:calc(8*var(--u));background:rgba(150,190,255,.07);border:1px solid rgba(170,200,255,.1);display:flex;align-items:center;gap:calc(8*var(--u));padding:0 calc(10*var(--u));color:var(--ink-3)}
+.search svg{width:calc(14*var(--u));stroke:currentColor;fill:none;stroke-width:1.5}
+.search kbd{margin-left:auto;font-family:var(--mono);font-size:calc(10*var(--u));background:rgba(255,255,255,.06);padding:calc(2*var(--u)) calc(5*var(--u));border-radius:calc(4*var(--u))}
+.av{width:calc(30*var(--u));height:calc(30*var(--u));border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--navy-hover));font-size:calc(11*var(--u));font-weight:600}
+.dbody{display:grid;grid-template-columns:calc(196*var(--u)) 1fr}
+.side{padding:calc(14*var(--u)) calc(12*var(--u));border-right:1px solid rgba(170,200,255,.09);display:flex;flex-direction:column;gap:calc(2*var(--u))}
+.side h6{font-family:var(--mono);font-weight:400;font-size:calc(10*var(--u));letter-spacing:.1em;color:var(--ink-3);padding:calc(4*var(--u)) calc(10*var(--u)) calc(6*var(--u))}
+.side h6+h6,.side .g2{margin-top:calc(16*var(--u))}
+.side a{display:flex;align-items:center;gap:calc(10*var(--u));padding:calc(8*var(--u)) calc(10*var(--u));border-radius:calc(7*var(--u));color:var(--ink-2)}
+.side a svg{width:calc(15*var(--u));stroke:currentColor;fill:none;stroke-width:1.4;opacity:.8}
+.side a i{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:calc(10*var(--u));color:var(--ink-3)}
+.side a.on{background:rgba(108,192,74,.14);color:#fff;box-shadow:inset 2px 0 0 var(--green-light)}
+.dmain{padding:calc(20*var(--u)) calc(22*var(--u)) calc(22*var(--u))}
+.dhead{display:flex;align-items:center;gap:calc(12*var(--u))}
+.dhead h5{font-weight:400;font-size:calc(21*var(--u));letter-spacing:-.015em}
+.seg{margin-left:auto;display:flex;padding:calc(3*var(--u));border-radius:calc(8*var(--u));background:rgba(150,190,255,.07);border:1px solid rgba(170,200,255,.1)}
+.seg span{font-size:calc(12*var(--u));padding:calc(5*var(--u)) calc(11*var(--u));border-radius:calc(6*var(--u));color:var(--ink-3)}
+.seg span.on{background:rgba(255,255,255,.1);color:#fff}
+.newd{height:calc(32*var(--u));padding:0 calc(13*var(--u));border-radius:calc(8*var(--u));background:var(--green);font-size:calc(12*var(--u));font-weight:500;display:inline-flex;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:calc(12*var(--u));margin-top:calc(18*var(--u))}
+.kpi{padding:calc(14*var(--u)) calc(16*var(--u));border-radius:calc(10*var(--u));background:rgba(40,80,150,.22);border:1px solid rgba(170,200,255,.08)}
+.kpi small{font-size:calc(12*var(--u));color:var(--ink-3)}
+.kpi div{display:flex;justify-content:space-between;align-items:baseline;margin-top:calc(4*var(--u))}
+.kpi b{font-weight:400;font-size:calc(24*var(--u));letter-spacing:-.02em}
+.kpi svg{display:block;width:100%;height:calc(30*var(--u));margin-top:calc(8*var(--u))}
+.crow{display:grid;grid-template-columns:1.75fr 1fr;gap:calc(12*var(--u));margin-top:calc(12*var(--u))}
+.pane{padding:calc(16*var(--u));border-radius:calc(10*var(--u));background:rgba(40,80,150,.18);border:1px solid rgba(170,200,255,.08)}
+.pane h6{font-size:calc(13*var(--u));font-weight:500;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center}
+.lg{display:flex;gap:calc(12*var(--u));font-weight:400;font-size:calc(11*var(--u));color:var(--ink-3)}
+.lg i{display:inline-block;width:calc(8*var(--u));height:calc(8*var(--u));border-radius:2px;margin-right:calc(5*var(--u))}
+#area{display:block;width:100%;height:calc(190*var(--u));margin-top:calc(10*var(--u))}
+.bars{display:flex;flex-direction:column;gap:calc(14*var(--u));margin-top:calc(18*var(--u))}
+.bars p{display:flex;justify-content:space-between;font-size:calc(12*var(--u));color:var(--ink-2)}
+.bars p em{font-style:normal;font-family:var(--mono);color:var(--ink-3)}
+.tr{height:calc(6*var(--u));border-radius:9px;background:rgba(170,200,255,.08);margin-top:calc(6*var(--u));overflow:hidden}
+.tr i{display:block;height:100%;width:0;border-radius:9px;transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.tbl{margin-top:calc(12*var(--u));border-radius:calc(10*var(--u));border:1px solid rgba(170,200,255,.08);overflow:hidden}
+.tbl>div{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;padding:calc(11*var(--u)) calc(16*var(--u));font-size:calc(12.5*var(--u));color:var(--ink-2);align-items:center}
+.tbl>div+div{border-top:1px solid rgba(170,200,255,.07)}
+.tbl .th{background:rgba(40,80,150,.18);font-family:var(--mono);font-size:calc(10.5*var(--u));letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.tbl .m{font-family:var(--mono)}
+.tbl b{color:var(--ink);font-weight:500}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s cubic-bezier(.2,.7,.2,1)}
+.draw.d2{transition-delay:.2s}
+.fade{opacity:0;transition:opacity 1s .9s}
+#dash.in .draw{stroke-dashoffset:0}#dash.in .fade{opacity:1}
+/* ---------- services / packs ---------- */
+#services{padding:calc(190*var(--u)) calc(64*var(--u)) calc(160*var(--u))}
+.split{display:grid;grid-template-columns:1fr calc(520*var(--u));gap:calc(80*var(--u));align-items:end;margin-bottom:calc(72*var(--u))}
+.split .h2{margin-top:calc(22*var(--u));max-width:calc(700*var(--u))}
+.split .lede{max-width:calc(560*var(--u));margin-top:calc(22*var(--u))}
+.split .row{justify-content:flex-start;margin-top:calc(32*var(--u))}
+.code header,.code footer{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:calc(12*var(--u))}
+.code header{height:calc(30*var(--u));color:var(--ink-2)}
+.code footer{padding-top:calc(10*var(--u));color:var(--ink-3)}
+.dot{display:inline-flex;align-items:center;gap:calc(8*var(--u))}
+#typed{padding:calc(14*var(--u)) 0 calc(6*var(--u));font-family:var(--mono);font-size:calc(13*var(--u));line-height:1.6;color:rgba(214,228,255,.72);white-space:pre;height:calc(250*var(--u));overflow:hidden}
+#typed::after{content:"";display:inline-block;width:.55em;height:1.1em;vertical-align:text-bottom;background:rgba(214,228,255,.8);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u))}
+.pk{min-height:calc(400*var(--u));border-radius:calc(12*var(--u));padding:calc(28*var(--u)) calc(30*var(--u));display:flex;flex-direction:column;overflow:hidden;transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .5s,opacity 1s cubic-bezier(.2,.7,.2,1)}
+.pk.in:hover{transform:translateY(calc(-6*var(--u)))}
+.pk:hover{border-color:rgba(190,230,200,.32)}
+.pk .top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:calc(12*var(--u));color:var(--ink-3)}
+.pk .eb{font-family:var(--mono);font-size:calc(12*var(--u));letter-spacing:.08em;color:var(--ink-2);margin-top:calc(46*var(--u))}
+.pk h3{font-weight:400;font-size:calc(32*var(--u));line-height:1.12;letter-spacing:-.022em;margin-top:calc(12*var(--u))}
+.pk p{font-size:calc(16.5*var(--u));line-height:1.5;color:var(--ink-2);margin-top:calc(14*var(--u))}
+.meta{margin-top:auto;padding-top:calc(22*var(--u));border-top:1px solid rgba(200,220,255,.16);display:flex;justify-content:space-between;align-items:flex-end}
+.meta small{display:block;font-size:calc(12*var(--u));color:var(--ink-3)}
+.meta b{display:block;font-weight:300;font-size:calc(30*var(--u));letter-spacing:-.03em}
+.pk>.meta{margin-top:auto}.pk p+.meta{margin-top:auto}
+.pk.lead{background:linear-gradient(155deg,#4cb957 0%,#3BA845 55%,#2a7f5a 100%);border:1px solid rgba(220,255,225,.35);box-shadow:0 calc(30*var(--u)) calc(80*var(--u)) rgba(40,140,60,.3)}
+.pk.lead .top,.pk.lead .meta small{color:rgba(255,255,255,.72)}.pk.lead p,.pk.lead .eb{color:rgba(255,255,255,.85)}
+.pk.lead .meta{border-color:rgba(255,255,255,.25)}
+.steps{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(20*var(--u));margin-top:calc(56*var(--u));counter-reset:s}
+.steps li{display:flex;gap:calc(16*var(--u));padding-top:calc(22*var(--u));border-top:1px solid var(--line);font-size:calc(16*var(--u));color:var(--ink-2);line-height:1.45;position:relative;counter-increment:s}
+.steps li::before{content:"0" counter(s);font-family:var(--mono);font-size:calc(12*var(--u));color:var(--green-light);padding-top:calc(3*var(--u))}
+.steps li::after{content:"";position:absolute;top:-1px;left:0;height:1px;width:0;background:linear-gradient(90deg,var(--green-light),transparent);transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.steps.in li::after{width:60%}
+.steps b{color:var(--ink);font-weight:500}
+/* ---------- why / uses ---------- */
+#why{position:relative;padding:calc(150*var(--u)) calc(64*var(--u)) calc(220*var(--u))}
+.whyhead{position:absolute;right:calc(64*var(--u));top:calc(150*var(--u));width:calc(600*var(--u));text-align:right;z-index:2}
+.whyhead .lede{max-width:calc(440*var(--u));margin:calc(20*var(--u)) 0 0 auto}
+.stair{position:relative;height:calc(880*var(--u))}
+.rc{position:absolute;width:calc(310*var(--u));min-height:calc(420*var(--u));border-radius:calc(12*var(--u));padding:calc(26*var(--u)) calc(26*var(--u)) calc(24*var(--u));display:flex;flex-direction:column;transition:transform .5s cubic-bezier(.2,.7,.2,1),background .5s,border-color .5s,opacity 1s cubic-bezier(.2,.7,.2,1)}
+.rc.in:hover{transform:translateY(calc(-8*var(--u)));background:var(--glass-hi);border-color:rgba(190,230,200,.3)}
+.rc:nth-child(1){left:0;top:0}.rc:nth-child(2){left:calc(334*var(--u));top:calc(150*var(--u))}.rc:nth-child(3){left:calc(668*var(--u));top:calc(300*var(--u))}.rc:nth-child(4){left:calc(1002*var(--u));top:calc(450*var(--u))}
+.rc .top{display:flex;justify-content:space-between;align-items:center}
+.tag{font-family:var(--mono);font-size:calc(11*var(--u));letter-spacing:.12em;color:var(--ink-3)}
+.rc h3{font-weight:400;font-size:calc(29*var(--u));letter-spacing:-.02em;margin-top:calc(64*var(--u))}
+.rc p{font-size:calc(16*var(--u));line-height:1.5;color:var(--ink-2);margin-top:calc(14*var(--u))}
+.chips{display:flex;flex-wrap:wrap;gap:calc(6*var(--u));margin-top:calc(20*var(--u))}
+.rc .tlink{margin-top:auto;padding-top:calc(22*var(--u));border-top:1px solid rgba(200,220,255,.12)}
+.rc .chips+.tlink{margin-top:auto}
+/* ---------- end ---------- */
+#contact{min-height:100vh;padding:calc(230*var(--u)) calc(64*var(--u)) calc(36*var(--u));display:flex;flex-direction:column}
+.cta{max-width:calc(880*var(--u));margin:0 auto;padding:calc(56*var(--u)) calc(60*var(--u)) calc(50*var(--u));border-radius:calc(18*var(--u));text-align:center;overflow:hidden;position:relative;background:linear-gradient(180deg,rgba(40,90,170,.34),rgba(20,50,110,.3))}
+.cta::before{content:"";position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(190,240,200,.8),transparent)}
+.cta h2{font-weight:300;font-size:calc(72*var(--u));letter-spacing:-.032em;line-height:1.02;margin-top:calc(22*var(--u))}
+.cta .lede{max-width:calc(520*var(--u));margin:calc(20*var(--u)) auto 0}
+.cta .row{margin-top:calc(32*var(--u))}
+.note{font-family:var(--mono);font-size:calc(12*var(--u));color:var(--ink-3);letter-spacing:.02em;margin-top:calc(22*var(--u))}
+footer.f{margin-top:auto;padding-top:calc(150*var(--u))}
+.fgrid{display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:calc(40*var(--u));padding-bottom:calc(40*var(--u));border-bottom:1px solid var(--line)}
+.fgrid .logo img{height:calc(34*var(--u))}
+.fgrid p{font-size:calc(15*var(--u));line-height:1.5;color:var(--ink-3);max-width:calc(280*var(--u));margin-top:calc(16*var(--u))}
+.fgrid .chip{margin-top:calc(22*var(--u))}
+.fgrid h6{font-family:var(--mono);font-weight:400;font-size:calc(11*var(--u));letter-spacing:.1em;color:var(--ink-3);margin-bottom:calc(16*var(--u))}
+.fgrid ul{list-style:none;display:flex;flex-direction:column;gap:calc(11*var(--u))}
+.fgrid li a{font-size:calc(15*var(--u));color:var(--ink-2);transition:color .2s}
+.fgrid li a:hover{color:#fff}
+.legal{display:flex;justify-content:space-between;padding-top:calc(22*var(--u));font-size:calc(13*var(--u));color:var(--ink-3)}
+.legal div{display:flex;gap:calc(24*var(--u))}
+.wm{font-weight:300;font-size:calc(236*var(--u));line-height:.8;letter-spacing:-.05em;text-align:center;margin-top:calc(26*var(--u));background:linear-gradient(180deg,rgba(190,230,200,.22),rgba(190,230,200,0) 85%);-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
+/* ---------- phones ---------- */
+@media (max-width:820px){
+  .nav{top:14px;left:16px;right:16px;height:44px}
+  .logo{padding:5px 9px;border-radius:9px}.logo img{height:28px}
+  .menu,.right .plain,.pill.grey{display:none}
+  .pill.dark{height:38px;font-size:13px;padding:0 13px;border-radius:9px}
+  #hero{min-height:100svh}
+  .hl{left:20px;top:auto;bottom:250px;font-size:46px;line-height:44px}
+  .sub{left:20px;top:auto;bottom:212px;font-size:16px}
+  .hbtns{left:20px;top:auto;bottom:140px}
+  .btn{height:46px;font-size:15px;padding:0 16px;border-radius:10px}
+  .scard{left:auto;right:20px;top:auto;bottom:28px;width:150px;height:92px;font-size:18px;padding:12px 14px}
+  .scard svg{width:18px;height:18px}
+  .lede{font-size:16px}
+  #about{padding:150px 20px 80px}
+  .h2,#about .h2{font-size:32px}
+  .row{flex-wrap:wrap}
+  .stats{grid-template-columns:1fr 1fr;margin-top:48px}
+  .stats>div{padding:18px 14px}.stats>div:nth-child(n+3){border-top:1px solid var(--line)}.stats>div:nth-child(3){border-left:0}
+  .stats b{font-size:30px}.stats span{font-size:13px}
+  #dash{margin-top:48px;border-radius:12px;font-size:11px}
+  .crumb,.search,.side,.newd,.dhead .chip{display:none}
+  .dbody{grid-template-columns:1fr}.dmain{padding:14px 12px}.dhead h5{font-size:17px}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px}.kpi{padding:12px}.kpi b{font-size:20px}.kpi small{font-size:11px}
+  .crow{grid-template-columns:1fr;gap:8px}#area{height:140px}
+  .tbl>div{grid-template-columns:2fr 1fr 1fr;font-size:11px;padding:10px 12px}
+  .tbl>div>:nth-child(3),.tbl>div>:nth-child(4){display:none}
+  #services{padding:110px 16px 80px}
+  .split{grid-template-columns:1fr;gap:32px;margin-bottom:36px}
+  #typed{font-size:11px;height:200px}
+  .cards{grid-template-columns:1fr;gap:12px}
+  .pk{min-height:330px;padding:24px}.pk h3{font-size:28px}.pk p{font-size:15.5px}.pk .eb{margin-top:30px;font-size:11px}.meta b{font-size:26px}
+  .steps{grid-template-columns:1fr;gap:14px}.steps li{font-size:15px}
+  #why{padding:80px 16px 110px}
+  .whyhead{position:static;width:auto;text-align:left;margin-bottom:28px}
+  .whyhead .lede{margin:16px 0 0}
+  .stair{height:auto;display:flex;flex-direction:column;gap:12px}
+  .rc{position:static;width:100%;min-height:auto;padding:24px}.rc h3{font-size:27px;margin-top:34px}.rc p{font-size:15.5px}
+  #contact{padding:150px 16px 26px}
+  .cta{padding:40px 22px 34px;border-radius:14px}.cta h2{font-size:42px}
+  footer.f{padding-top:90px}
+  .fgrid{grid-template-columns:1fr 1fr;gap:28px 20px}.fgrid>div:first-child{grid-column:1/-1}
+  .fgrid li a{font-size:14.5px}
+  .legal{flex-direction:column;gap:10px;font-size:12px}.legal div{flex-wrap:wrap;gap:16px}
+  .wm{font-size:76px;margin-top:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html.anim [data-in],.reveal{opacity:1!important;transform:none!important}
+  .draw{stroke-dashoffset:0}.fade{opacity:1}
+}
+</style>
+</head>
+<body id="top">
+
+<div id="scene" aria-hidden="true">
+  <div id="day">
+    <video id="pond" muted loop playsinline preload="auto" crossorigin="anonymous" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261104_160514_d8369d6e-d8ba-4532-9751-b32e0c8aaf75.mp4"></video>
+    <canvas id="pondfx"></canvas>
+  </div>
+  <div id="violet"></div>
+  <div id="night"></div>
+  <canvas id="koi"></canvas>
+</div>
+
+<header class="nav" id="nav" data-in>
+  <a href="#top" class="logo" aria-label="FinRidge home"><img src="finridge-logo.jpeg" alt="FinRidge — Unlock your financial potential"></a>
+  <nav class="menu">
+    <a href="#services">Services <svg viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></a>
+    <a href="#why">Why FinRidge <svg viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></a>
+    <a href="#careers">Careers <svg viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></a>
+    <a href="#about">About Us</a>
+  </nav>
+  <div class="right">
+    <a class="plain" href="tel:+97147034555">Call us</a>
+    <a class="pill grey" href="#contact">Contact</a>
+    <a class="pill dark" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section id="hero">
+  <h1 class="hl"><span><span data-in id="l1">Build Your</span></span><span><span data-in id="l2">Dream</span></span></h1>
+  <p class="sub" data-in id="sub">Unlock your financial potential</p>
+  <div class="hbtns" data-in id="hb">
+    <a class="btn fill" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a>
+    <a class="btn ghost" href="#services">Explore services</a>
+  </div>
+  <button class="scard" data-in id="sc" type="button">Scroll down<br>&amp; discover
+    <svg viewBox="0 0 22 22"><path d="M11 3v15M5 12l6 6 6-6"/></svg></button>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="h2 reveal">A trusted UAE brokerage connecting you with <span class="ac">Islamic and conventional banks</span><br>for credit cards and personal finance.</h2>
+  <p class="lede reveal">Finridge Commercial Brokers is an independent partner delivering retail finance solutions for banks and financial institutions across the UAE.</p>
+  <div class="row reveal">
+    <a class="btn fill" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a>
+    <a class="btn ghost" href="#contact">Contact us</a>
+  </div>
+  <div class="stats reveal">
+    <div><b>3</b><span>trusted partner<br>banks</span></div>
+    <div><b>2</b><span>core products —<br>cards &amp; finance</span></div>
+    <div><b>5</b><span>open roles<br>in Dubai</span></div>
+    <div><b>100%</b><span>focus on<br>compliance</span></div>
+  </div>
+  <div class="partners reveal"><span class="chip">Dubai Islamic Bank</span><span class="chip">Emirates Islamic</span><span class="chip">Sharjah Islamic Bank</span></div>
+
+  <div id="dash" class="reveal" aria-label="Illustrative application dashboard">
+    <div class="dtop">
+      <span class="mini"><img src="finridge-logo.jpeg" alt=""></span>
+      <span class="crumb">Applications&nbsp;&nbsp;/&nbsp;&nbsp;<b>Credit Card · Dubai</b></span>
+      <span class="sp"></span>
+      <span class="search"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>Search applications<kbd>⌘K</kbd></span>
+      <span class="chip">Sample data</span>
+      <span class="av">FR</span>
+    </div>
+    <div class="dbody">
+      <aside class="side">
+        <h6>WORKSPACE</h6>
+        <a class="on"><svg viewBox="0 0 16 16"><path d="M2 13l4-5 3 3 5-7"/></svg>Overview</a>
+        <a><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"/></svg>Applications<i>24</i></a>
+        <a><svg viewBox="0 0 16 16"><path d="M3 8l3 3 7-7"/></svg>Eligibility</a>
+        <a><svg viewBox="0 0 16 16"><path d="M4 2h6l3 3v9H4z"/></svg>Documents</a>
+        <h6 class="g2">PRODUCTS</h6>
+        <a><svg viewBox="0 0 16 16"><rect x="1.5" y="4" width="13" height="8" rx="1.5"/><path d="M1.5 7h13"/></svg>Credit Cards<i>14</i></a>
+        <a><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v6M6 7h4"/></svg>Personal Finance<i>10</i></a>
+        <a><svg viewBox="0 0 16 16"><path d="M10 3a5 5 0 1 0 0 10 6 6 0 0 1 0-10z"/></svg>Islamic Finance</a>
+        <a><svg viewBox="0 0 16 16"><path d="M2 6l6-3 6 3M3 6v6M13 6v6M6 6v6M10 6v6M2 13h12"/></svg>Partner Banks<i>3</i></a>
+      </aside>
+      <div class="dmain">
+        <div class="dhead">
+          <h5>Application overview</h5>
+          <span class="chip up">▲ Illustrative</span>
+          <div class="seg"><span>7D</span><span class="on">30D</span><span>90D</span></div>
+          <span class="newd">+ New enquiry</span>
+        </div>
+        <div class="kpis" id="kpis"></div>
+        <div class="crow">
+          <div class="pane"><h6>Enquiries &amp; approvals <span class="lg"><span><i style="background:#6CC04A"></i>Enquiries</span><span><i style="background:#7fb4ff"></i>Approvals</span></span></h6>
+            <svg id="area" viewBox="0 0 600 190" preserveAspectRatio="none"></svg></div>
+          <div class="pane"><h6>Product mix</h6><div class="bars" id="bars"></div></div>
+        </div>
+        <div class="tbl">
+          <div class="th"><span>Application</span><span>Product</span><span>Bank</span><span>Submitted</span><span>Status</span></div>
+          <div><b>FR-0428 · Credit card</b><span>Card</span><span>DIB</span><span class="m">12 Nov</span><span><span class="chip live">Approved</span></span></div>
+          <div><span>FR-0431 · Personal loan</span><span>Finance</span><span>EI</span><span class="m">13 Nov</span><span><span class="chip live">In review</span></span></div>
+          <div><span>FR-0436 · Islamic card</span><span>Card</span><span>SIB</span><span class="m">14 Nov</span><span><span class="chip">Eligibility</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="split">
+    <div class="reveal">
+      <h2 class="h2">Compare, qualify, apply, get approved — <span class="ac">with a partner you <span class="sf">trust.</span></span></h2>
+      <p class="lede">We simplify access to financial solutions through partnerships with leading UAE banks — transparent, efficient and tailored, from personal finance to everyday spending.</p>
+      <div class="row"><a class="btn white" href="#why">Why FinRidge</a><a class="btn dk" href="#contact">Contact us</a></div>
+    </div>
+    <div class="code reveal" aria-hidden="true">
+      <header><span>enquiry.json</span><span>FinRidge · Dubai</span></header>
+      <div id="typed"></div>
+      <footer><span>enquiry FR-0428</span><span class="dot">ready</span></footer>
+    </div>
+  </div>
+  <div class="cards">
+    <article class="pk lead reveal">
+      <div class="top"><span>01</span><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span></div>
+      <div class="eb">CREDIT CARDS</div>
+      <h3>Pay with Confidence, Every Day</h3>
+      <p>A reliable, convenient payment solution for individuals and businesses — from top UAE banks.</p>
+      <div class="meta"><div><small>Partner banks</small><b>3</b></div><a class="tlink" href="mailto:info@finridge.net?subject=Credit%20card%20enquiry">Apply now <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+    </article>
+    <article class="pk glass reveal" style="transition-delay:.08s">
+      <div class="top"><span>02</span><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/></svg></span></div>
+      <div class="eb">PERSONAL FINANCE</div>
+      <h3>Loans for Life’s Moments</h3>
+      <p>Flexible financing for travel, education, debt consolidation or the unexpected.</p>
+      <div class="meta"><div><small>Built around</small><b>You</b></div><a class="tlink" href="mailto:info@finridge.net?subject=Personal%20finance%20enquiry">Apply now <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+    </article>
+    <article class="pk glass reveal" style="transition-delay:.16s">
+      <div class="top"><span>03</span><span class="ico"><svg viewBox="0 0 24 24"><path d="M15 4a8 8 0 1 0 0 16 9 9 0 0 1 0-16z"/><path d="M18 8l.6 1.6 1.7.1-1.3 1 .4 1.7-1.4-.9-1.4.9.4-1.7-1.3-1 1.7-.1z"/></svg></span></div>
+      <div class="eb">ISLAMIC &amp; CONVENTIONAL</div>
+      <h3>Your Values, Your Choice</h3>
+      <p>Sharia-compliant and conventional options from both Islamic and conventional banks.</p>
+      <div class="meta"><div><small>Options</small><b>Both</b></div><a class="tlink" href="#contact">Talk to us <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></div>
+    </article>
+  </div>
+  <ol class="steps reveal">
+    <li><span><b>Tell us what you need.</b> Share the product and your fixed monthly income.</span></li>
+    <li><span><b>Check eligibility.</b> Our advisors match your profile to partner bank criteria.</span></li>
+    <li><span><b>Apply and get approved.</b> We prepare documents and follow up until it’s done.</span></li>
+  </ol>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="whyhead">
+    <h2 class="h2 reveal">Built on deep<br><span class="sf">banking</span> experience.</h2>
+    <p class="lede reveal">Our leadership brings years of banking and service-industry experience across the UAE and Indian markets.</p>
+  </div>
+  <div class="stair">
+    <article class="rc glass reveal">
+      <div class="top"><span class="tag">OUR SERVICE</span><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/></svg></span></div>
+      <h3>Specialized Sales</h3>
+      <p>A dedicated sales team that promotes our partners’ products to retail and corporate clients.</p>
+      <div class="chips"><span class="chip">Retail</span><span class="chip">Corporate</span></div>
+      <a class="tlink" href="#contact">Talk to sales <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </article>
+    <article class="rc glass reveal" style="transition-delay:.06s">
+      <div class="top"><span class="tag">OUR SERVICE</span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></svg></span></div>
+      <h3>Excellence in Quality</h3>
+      <p>We onboard the right customers and deliver a high standard of service at every step.</p>
+      <div class="chips"><span class="chip">Onboarding</span><span class="chip">Service</span></div>
+      <a class="tlink" href="#contact">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </article>
+    <article class="rc glass reveal" style="transition-delay:.12s">
+      <div class="top"><span class="tag">OUR SERVICE</span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span></div>
+      <h3>Fully Compliant</h3>
+      <p>Every process follows the compliance, governance, regulatory and policy requirements of our partners.</p>
+      <div class="chips"><span class="chip">Governance</span><span class="chip">Regulatory</span></div>
+      <a class="tlink" href="#contact">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </article>
+    <article class="rc glass reveal" style="transition-delay:.18s">
+      <div class="top"><span class="tag">OUR SERVICE</span><span class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg></span></div>
+      <h3>Safe Handling</h3>
+      <p>Personal and financial data protected to a high standard — always.</p>
+      <div class="chips"><span class="chip">Data privacy</span><span class="chip">Security</span></div>
+      <a class="tlink" href="#contact">Learn more <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+    </article>
+  </div>
+</section>
+
+<!-- CTA + FOOTER -->
+<section id="contact">
+  <div class="cta glass reveal">
+    <span class="chip live">Now hiring in Dubai</span>
+    <h2>Unlock Your<br><span class="sf">Financial</span> Potential</h2>
+    <p class="lede">Talk to our advisors about credit cards and personal finance from leading UAE banks.</p>
+    <div class="row"><a class="btn fill" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a><a class="btn ghost" href="tel:+97147034555">+971 4703 4555</a></div>
+    <p class="note">Islamic &amp; conventional&nbsp;&nbsp;·&nbsp;&nbsp;Fully compliant&nbsp;&nbsp;·&nbsp;&nbsp;Dubai, UAE</p>
+  </div>
+  <footer class="f">
+    <div class="fgrid">
+      <div>
+        <a href="#top" class="logo"><img src="finridge-logo.jpeg" alt="FinRidge"></a>
+        <p>Finridge Commercial Brokers LLC — retail finance solutions for Islamic and conventional banks across the UAE.</p>
+        <span class="chip live">Office open · Oud Metha</span>
+      </div>
+      <div><h6>SERVICES</h6><ul><li><a href="#services">Credit Cards</a></li><li><a href="#services">Personal Finance</a></li><li><a href="#services">Islamic Finance</a></li></ul></div>
+      <div id="careers"><h6>CAREERS</h6><ul>
+        <li><a href="mailto:info@finridge.net?subject=Application%3A%20Credit%20Card%20Sales">Credit Card Sales</a></li>
+        <li><a href="mailto:info@finridge.net?subject=Application%3A%20Personal%20Finance%20Sales">Personal Finance Sales</a></li>
+        <li><a href="mailto:info@finridge.net?subject=Application%3A%20Team%20Leader">Team Leaders</a></li>
+        <li><a href="mailto:info@finridge.net?subject=Application%3A%20Accounts%20%26%20Admin%20Manager">Accounts &amp; Admin</a></li></ul></div>
+      <div><h6>PARTNERS</h6><ul><li><a href="#about">Dubai Islamic Bank</a></li><li><a href="#about">Emirates Islamic</a></li><li><a href="#about">Sharjah Islamic Bank</a></li></ul></div>
+      <div><h6>CONTACT</h6><ul><li><a href="tel:+97147034555">+971 4703 4555</a></li><li><a href="mailto:info@finridge.net">info@finridge.net</a></li><li><a href="https://www.google.com/maps?q=Business+Venue+Building+Oud+Metha+Dubai" target="_blank" rel="noreferrer">Office 310, Business Venue Bldg, Oud Metha, Dubai</a></li><li><a href="https://www.linkedin.com/company/finridge-commercial-brokers-llc/" target="_blank" rel="noreferrer">LinkedIn ↗</a></li></ul></div>
+    </div>
+    <div class="legal"><span>©2026 Finridge Commercial Brokers LLC · P.O. Box 45592, Dubai</span><div><a href="#top">Back to top</a><a href="#services">Services</a><a href="#contact">Contact</a></div></div>
+    <div class="wm" aria-hidden="true">FinRidge</div>
+  </footer>
+</section>
+</main>
+
+<script>
+(function(){
+  var R = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.__R = R;
+  var de = document.documentElement;
+  function setU(){ var w = de.clientWidth; de.style.setProperty('--u', (w / (w > 820 ? 1440 : 390)) + 'px'); }
+  setU(); addEventListener('resize', setU);
+
+  // shared pointer
+  var P = window.__P = { u: .5, v: .5, tx: 0, ty: 0, inside: false };
+  addEventListener('pointermove', function(e){ P.u = e.clientX / innerWidth; P.v = 1 - e.clientY / innerHeight; P.tx = P.u * 2 - 1; P.ty = P.v * 2 - 1; P.inside = true; });
+  de.addEventListener('pointerleave', function(){ P.inside = false; P.tx = P.ty = 0; });
+
+  // entrance
+  function done(){ de.classList.remove('anim'); }
+  if (R || !Element.prototype.animate) done();
+  else {
+    var E = 'cubic-bezier(.2,.75,.2,1)';
+    [['nav','translateY(-14px)',0,900],['l1','translateY(105%)',250,1100],['l2','translateY(105%)',370,1100],
+     ['sub','translateY(12px)',620,900],['hb','translateY(14px)',740,900],['sc','translateY(40px) scale(.96)',880,1100]]
+    .forEach(function(a){ document.getElementById(a[0]).animate([{opacity:0,transform:a[1]},{opacity:1,transform:'none'}],{delay:a[2],duration:a[3],easing:E,fill:'backwards'}); });
+    requestAnimationFrame(done); setTimeout(done, 3000);
+  }
+
+  // reveal
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); if (e.target.id === 'dash') dashIn(); } }); }, { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(function(n){ if (R){ n.classList.add('in'); } else io.observe(n); });
+
+  document.getElementById('sc').onclick = function(){ document.getElementById('about').scrollIntoView({ behavior: R ? 'auto' : 'smooth' }); };
+
+  // scene crossfade
+  var day = document.getElementById('day'), vio = document.getElementById('violet'), night = document.getElementById('night'), nav = document.getElementById('nav'), endS = document.getElementById('contact'), vid = document.getElementById('pond');
+  function ss(a,b,v){ var t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); }
+  function scene(){
+    var h = innerHeight, y = scrollY, tv = ss(.15*h, 1.05*h, y), et = endS.offsetTop, tn = ss(et - 1.1*h, et - .1*h, y);
+    day.style.opacity = 1 - tv;
+    day.style.transform = 'scale(' + (1 + .08*tv) + ') translateY(' + (-.06*y) + 'px)';
+    vio.style.opacity = tv * (1 - tn); night.style.opacity = tn;
+    nav.classList.toggle('scrolled', y > .5*h);
+    if (!R && vid.getAttribute('src')){ if (tv < .999){ if (vid.paused) vid.play().catch(function(){}); } else if (!vid.paused) vid.pause(); }
+  }
+  addEventListener('scroll', scene, { passive: true }); addEventListener('resize', scene); scene();
+
+  // reduced motion: drop the video
+  if (R){ vid.removeAttribute('src'); vid.load(); }
+
+  // ---------- pond ripple lens (WebGL1) ----------
+  (function(){
+    if (R) return;
+    var cv = document.getElementById('pondfx'), gl = cv.getContext('webgl', { premultipliedAlpha: false });
+    function fallback(){ vid.classList.add('show'); }
+    if (!gl){ fallback(); return; }
+    var vs = 'attribute vec2 p;varying vec2 vUv;void main(){vUv=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+    var fs = 'precision highp float;varying vec2 vUv;uniform sampler2D tex;uniform vec2 mouse,scale,tilt;uniform float time,presence;' +
+      'vec4 S(vec2 uv){return texture2D(tex,(uv-.5)*scale+.5+tilt);}' +
+      'void main(){float dist=distance(vUv,mouse);float ripple=sin(dist*20.-time*5.)*.006;float strength=smoothstep(.2,0.,dist)*presence;' +
+      'vec2 off=normalize(vUv-mouse+1e-5)*ripple*strength;float r=S(vUv+off+vec2(.005,0.)*strength).r;float g=S(vUv+off).g;float b=S(vUv+off-vec2(.005,0.)*strength).b;gl_FragColor=vec4(r,g,b,1.);}';
+    function sh(t,s){ var o = gl.createShader(t); gl.shaderSource(o,s); gl.compileShader(o); return o; }
+    var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)){ fallback(); return; }
+    gl.useProgram(pr);
+    var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+    var lp = gl.getAttribLocation(pr,'p'); gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+    var tx = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tx);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(function(k){ gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE); });
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    var U = {}; ['mouse','scale','tilt','time','presence'].forEach(function(n){ U[n] = gl.getUniformLocation(pr, n); });
+    var sx = 1, sy = 1;
+    function size(){ var d = Math.min(devicePixelRatio || 1, 1.5); cv.width = innerWidth * d; cv.height = innerHeight * d; gl.viewport(0,0,cv.width,cv.height);
+      var A = cv.width / cv.height, V = 1276/720; if (A > V){ sx = 1; sy = V/A; } else { sx = A/V; sy = 1; } sx *= .975; sy *= .975; }
+    size(); addEventListener('resize', size);
+    var ready = false, t0 = performance.now(), last = t0, pres = 0, mx = .5, my = .5, ttx = 0, tty = 0;
+    vid.addEventListener('playing', function(){ ready = true; cv.classList.add('on'); }, { once: true });
+    vid.addEventListener('error', fallback);
+    vid.play().catch(function(){});
+    (function loop(now){
+      requestAnimationFrame(loop);
+      var dt = Math.min((now - last) / 1000, .05); last = now;
+      pres += ((P.inside ? 1 : 0) - pres) * (1 - Math.exp(-6 * dt));
+      if (P.inside){ mx = P.u; my = P.v; }
+      var k = 1 - Math.exp(-dt / .1); ttx += (P.tx - ttx) * k; tty += (P.ty - tty) * k;
+      if (!ready || vid.paused || vid.readyState < 2) return;
+      try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, vid); } catch (e){ fallback(); ready = false; return; }
+      gl.uniform2f(U.mouse, mx, my); gl.uniform2f(U.scale, sx, sy); gl.uniform2f(U.tilt, ttx*.009*sx, tty*.009*sy);
+      gl.uniform1f(U.time, (now - t0) / 1000); gl.uniform1f(U.presence, pres);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    })(t0);
+  })();
+
+  // ---------- dashboard ----------
+  var seed;
+  function rnd(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  function series(n, sd, base, amp, trend){ seed = sd; var a = []; for (var i = 0; i < n; i++) a.push(base + trend*i/(n-1) + Math.sin(i*.9 + sd)*amp*.5 + (rnd() - .5)*amp); return a; }
+  function curve(pts){ var d = 'M' + pts[0][0] + ' ' + pts[0][1]; for (var i = 1; i < pts.length; i++){ var q = pts[i-1], p = pts[i], m = (q[0] + p[0]) / 2; d += ' C' + m + ' ' + q[1] + ' ' + m + ' ' + p[1] + ' ' + p[0] + ' ' + p[1]; } return d; }
+  var NS = 'http://www.w3.org/2000/svg', gid = 0;
+  function grad(svg, col, a){ var id = 'g' + (gid++); svg.insertAdjacentHTML('afterbegin', '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + col + '" stop-opacity="' + a + '"/><stop offset="1" stop-color="' + col + '" stop-opacity="0"/></linearGradient></defs>'); return id; }
+  var K = [['Enquiries','1,284','+12%','#6CC04A',[14,3,20,7,10],1],['Eligible','62%','+3.1pt','#7fb4ff',[14,7,18,6,9],1],['Avg. days to decision','4.2','−0.8','#a8e6b0',[14,11,22,6,-6],1],['Partner banks','3','Live','#3BA845',[14,5,12,4,14],0]];
+  var kp = document.getElementById('kpis');
+  K.forEach(function(k){
+    var el = document.createElement('div'); el.className = 'kpi';
+    el.innerHTML = '<small>' + k[0] + '</small><div><b>' + k[1] + '</b><span class="chip' + (k[5] ? ' up' : '') + '">' + k[2] + '</span></div><svg viewBox="0 0 200 30" preserveAspectRatio="none"></svg>';
+    kp.appendChild(el);
+    var s = series.apply(null, k[4]), mn = Math.min.apply(null, s), mxv = Math.max.apply(null, s);
+    var pts = s.map(function(v,i){ return [i*200/13, 28 - (v - mn)/(mxv - mn || 1)*24]; });
+    var svg = el.querySelector('svg'), id = grad(svg, k[3], .35), d = curve(pts);
+    svg.insertAdjacentHTML('beforeend', '<path class="fade" d="' + d + ' L200 30 L0 30Z" fill="url(#' + id + ')"/><path class="draw" pathLength="1" d="' + d + '" fill="none" stroke="' + k[3] + '" stroke-width="1.6" vector-effect="non-scaling-stroke"/>');
+  });
+  (function(){
+    var svg = document.getElementById('area'), h = '';
+    for (var i = 0; i < 5; i++) h += '<line x1="0" x2="600" y1="' + (12 + i*41.5) + '" y2="' + (12 + i*41.5) + '" stroke="rgba(170,200,255,.08)" vector-effect="non-scaling-stroke"/>';
+    var a = series(30,2,90,26,60), b = series(30,9,70,22,30), mx = Math.max.apply(null, a.concat(b)) + 10;
+    function P2(s){ return s.map(function(v,i){ return [i*600/29, 190 - 12 - v/mx*160]; }); }
+    var pa = P2(a), pb = P2(b), da = curve(pa), db = curve(pb), ga = grad(svg,'#6CC04A',.42), gb = grad(svg,'#7fb4ff',.22), m = pa[22];
+    h += '<path class="fade" d="' + da + ' L600 190 L0 190Z" fill="url(#' + ga + ')"/><path class="fade" d="' + db + ' L600 190 L0 190Z" fill="url(#' + gb + ')"/>' +
+      '<path class="draw" pathLength="1" d="' + da + '" fill="none" stroke="#6CC04A" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
+      '<path class="draw d2" pathLength="1" d="' + db + '" fill="none" stroke="#7fb4ff" stroke-width="1.6" vector-effect="non-scaling-stroke"/>' +
+      '<g class="fade"><line x1="' + m[0] + '" x2="' + m[0] + '" y1="8" y2="190" stroke="rgba(210,230,255,.25)" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><circle cx="' + m[0] + '" cy="' + m[1] + '" r="4.5" fill="#0e2246" stroke="#a8e6b0" stroke-width="2" vector-effect="non-scaling-stroke"/></g>';
+    svg.insertAdjacentHTML('beforeend', h);
+  })();
+  var BARS = [['Credit Cards',46,'#6CC04A'],['Personal Finance',32,'#7fb4ff'],['Islamic Finance',14,'#a8e6b0'],['Debt Consolidation',6,'#ffc27a'],['Other',2,'#c9d6ee']];
+  document.getElementById('bars').innerHTML = BARS.map(function(b){ return '<div><p>' + b[0] + '<em>' + b[1] + '%</em></p><div class="tr"><i data-w="' + (b[1]/46*100) + '" style="background:linear-gradient(90deg,' + b[2] + ',' + b[2] + 'aa)"></i></div></div>'; }).join('');
+  function dashIn(){ document.querySelectorAll('#bars i').forEach(function(i){ i.style.width = i.dataset.w + '%'; }); }
+  if (R) dashIn();
+
+  // ---------- typing ----------
+  var TXT = '{\n  "enquiry": "FR-0428",\n  "product": "credit_card",\n  "type": "islamic",\n  "monthly_income_aed": 12000,\n  "emirate": "Dubai",\n  "banks": [\n    "Dubai Islamic Bank",\n    "Emirates Islamic",\n    "Sharjah Islamic Bank"\n  ],\n  "status": "eligibility_check"';
+  var ty = document.getElementById('typed');
+  if (R){ ty.textContent = TXT; }
+  else {
+    var started = false;
+    new IntersectionObserver(function(es, o){ if (es[0].isIntersecting && !started){ started = true; o.disconnect(); go(0); } }, { threshold: .3 }).observe(ty);
+    function go(i){ ty.textContent = TXT.slice(0, i); if (i >= TXT.length) return setTimeout(function(){ go(0); }, 3200); setTimeout(function(){ go(i + 1); }, TXT[i] === '\n' ? 120 : 22); }
+  }
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const R = window.__R, P = window.__P;
+const canvas = document.getElementById('koi');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = .95;
+const scene = new THREE.Scene();
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture;
+scene.add(new THREE.HemisphereLight(0xd6ecff, 0x14284b, .7));
+const key = new THREE.DirectionalLight(0xdfffe4, 1.6); key.position.set(3,5,6); scene.add(key);
+const rim = new THREE.DirectionalLight(0x6cc04a, 2.8); rim.position.set(-5,-1,-4); scene.add(rim);
+const cam = new THREE.PerspectiveCamera(30, 1, .1, 100); cam.position.set(0,0,10);
+let fh = 2*Math.tan(THREE.MathUtils.degToRad(15))*10, fw = fh;
+function size(){ renderer.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix(); fw = fh*cam.aspect; }
+size();
+
+const rig = new THREE.Group(), body = new THREE.Group(); rig.add(body); scene.add(rig);
+const uni = { uTime: { value: 0 }, uAmp: { value: .075 }, uFreq: { value: 5.2 }, uSpeed: { value: 6.5 } };
+
+new GLTFLoader().load('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261104_151843_47d87652-1c40-465c-b0d6-cd94c22a9d3e.glb', (g) => {
+  let mesh; g.scene.updateMatrixWorld(true);
+  g.scene.traverse((o) => { if (o.isMesh && !mesh) mesh = o; });
+  const geo = mesh.geometry.clone(); geo.applyMatrix4(mesh.matrixWorld);
+  geo.computeBoundingBox(); let s = new THREE.Vector3(); geo.boundingBox.getSize(s);
+  if (s.z >= s.x && s.z >= s.y) geo.rotateY(Math.PI/2); else if (s.y >= s.x && s.y >= s.z) geo.rotateZ(-Math.PI/2);
+  geo.rotateY(Math.PI);
+  geo.computeBoundingBox(); const c = new THREE.Vector3(); geo.boundingBox.getCenter(c); geo.translate(-c.x,-c.y,-c.z);
+  geo.boundingBox.getSize(s); const L = Math.max(s.x,s.y,s.z); geo.scale(1/L,1/L,1/L); geo.computeVertexNormals();
+  const map = mesh.material && mesh.material.map;
+  const mat = new THREE.MeshPhysicalMaterial({ color: map ? 0xc8f0d0 : 0xb6e8c2, map: map || null, emissiveMap: map || null,
+    roughness: .18, metalness: .15, clearcoat: 1, clearcoatRoughness: .1, iridescence: .85, iridescenceIOR: 1.4, iridescenceThicknessRange: [260,700],
+    emissive: 0x2f8a38, emissiveIntensity: .55, sheen: .25, sheenColor: new THREE.Color(0x9fe7ff), transparent: true, opacity: .95, envMapIntensity: .75, side: THREE.DoubleSide });
+  mat.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, uni);
+    sh.vertexShader = 'uniform float uTime,uAmp,uFreq,uSpeed;\n' + sh.vertexShader.replace('#include <begin_vertex>',
+      `vec3 transformed = vec3(position);
+       float tail = clamp((0.32 - position.x)/0.82, 0.0, 1.0);
+       transformed.z += sin(position.x*uFreq - uTime*uSpeed)*uAmp*(0.15 + 1.6*tail*tail);
+       transformed.y += cos(position.x*uFreq*0.5 - uTime*uSpeed*0.5)*uAmp*0.12*tail;`);
+  };
+  body.add(new THREE.Mesh(geo, mat));
+  poses(); if (R) render();
+});
+
+const DESK = {
+  hero:  [ .02,  .16, .72, .18, -.92,  .05],
+  about: [-.66, -.6,  .42, .5,   .2,  -.1 ],
+  dash:  [ .5,  -.5,  .46,-.35,  .32,  .1 ],
+  serv:  [ .4,  -.78, .5,  .55, -.05,  .08],
+  why:   [-.42, -.42, .6,  3.0,  .12, -.06],
+  end:   [-.7,   .56, .48, .3,  -.14,  .05],
+};
+const PHONE = { hero:[.12,.38,.46], about:[.42,-.72,.3], dash:[-.35,-.74,.3], serv:[.38,-.74,.3], why:[-.3,-.76,.32], end:[.3,-.74,.32] };
+let STOPS = [];
+function top(id){ const e = document.getElementById(id); return e.getBoundingClientRect().top + scrollY; }
+function poses(){
+  const h = innerHeight, phone = innerWidth <= 820, d = document.getElementById('dash');
+  const maxS = document.documentElement.scrollHeight - h;
+  const at = { hero: 0, about: top('about') + .2*h, dash: top('dash') + d.offsetHeight/2 - .5*h, serv: top('services') + .3*h, why: top('why') + .3*h, end: Math.min(top('contact'), maxS) };
+  STOPS = Object.keys(DESK).map((k) => { const p = DESK[k].slice(); if (phone) { p[0] = PHONE[k][0]; p[1] = PHONE[k][1]; p[2] = PHONE[k][2]; } return { y: at[k], p }; });
+}
+const ease = (t) => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+function target(y){
+  if (!STOPS.length) return DESK.hero;
+  if (y <= STOPS[0].y) return STOPS[0].p;
+  for (let i = 1; i < STOPS.length; i++){ const a = STOPS[i-1], b = STOPS[i];
+    if (y <= b.y){ const t = ease((y - a.y)/Math.max(1, b.y - a.y)); return a.p.map((v,j) => v + (b.p[j] - v)*t); } }
+  return STOPS[STOPS.length-1].p;
+}
+const cur = DESK.hero.slice();
+let last = performance.now(), t0 = last, lastY = scrollY, vel = 0, swim = 0;
+function frame(now, snap){
+  const dt = Math.min((now - last)/1000, .05); last = now; const t = (now - t0)/1000;
+  const inst = dt ? (scrollY - lastY)/dt : 0; lastY = scrollY; vel += (inst - vel)*.1;
+  const up = Math.min(Math.abs(vel)/1800, 1.4);
+  if (!R){ swim += dt*(1 + up); uni.uTime.value = swim; uni.uAmp.value = .07 + .03*up; }
+  const tg = target(scrollY), k = (R || snap) ? 1 : 1 - Math.exp(-3.2*dt);
+  for (let i = 0; i < 6; i++) cur[i] += (tg[i] - cur[i])*k;
+  const bob = R ? 0 : Math.sin(.9*t)*.018;
+  rig.position.set(cur[0]*fw/2, (cur[1] + bob)*fh/2, 0);
+  rig.rotation.set(cur[5] + (R ? 0 : Math.sin(.7*t)*.04), cur[3] + (R ? 0 : Math.sin(.5*t)*.06), cur[4], 'XYZ');
+  body.scale.setScalar(cur[2]*fh);
+  if (!R){ const kc = 1 - Math.exp(-dt/.1); cam.rotation.y += (-P.tx*.01745 - cam.rotation.y)*kc; cam.rotation.x += (P.ty*.01745 - cam.rotation.x)*kc; }
+  renderer.render(scene, cam);
+}
+function render(){ frame(performance.now(), true); }
+addEventListener('resize', () => { size(); poses(); if (R) render(); });
+addEventListener('load', poses);
+if (R) addEventListener('scroll', render, { passive: true });
+else (function loop(n){ requestAnimationFrame(loop); frame(n); })(performance.now());
+poses();
+</script>
+</body>
+</html>
