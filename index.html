@@ -285,6 +285,38 @@ footer.f{margin-top:auto;padding-top:calc(150*var(--u))}
   html.anim [data-in],.reveal{opacity:1!important;transform:none!important}
   .draw{stroke-dashoffset:0}.fade{opacity:1}
 }
+
+/* ---------- mobile menu + phone polish ---------- */
+.burger,.msheet{display:none}
+@media (max-width:820px){
+  .burger{display:grid;place-items:center;width:44px;height:44px;margin-left:8px;border-radius:10px;background:rgba(20,40,75,.62);border:1px solid rgba(200,220,255,.22);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);flex:none}
+  .burger span{grid-area:1/1;width:18px;height:2px;border-radius:2px;background:#fff;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .burger span:first-child{transform:translateY(-4px)}.burger span:last-child{transform:translateY(4px)}
+  .burger.open span:first-child{transform:rotate(45deg)}.burger.open span:last-child{transform:rotate(-45deg)}
+  .navr{display:flex;align-items:center}
+  .msheet{display:flex;position:fixed;inset:0;z-index:19;flex-direction:column;justify-content:center;padding:96px 26px 40px;background:rgba(10,23,48,.95);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
+  .msheet.open{opacity:1;visibility:visible;transition:opacity .35s}
+  .msheet>a{display:flex;justify-content:space-between;align-items:center;min-height:58px;font-size:30px;font-weight:300;letter-spacing:-.02em;border-bottom:1px solid rgba(170,200,250,.15);transform:translateY(14px);opacity:0;transition:transform .5s cubic-bezier(.2,.7,.2,1),opacity .5s}
+  .msheet>a::after{content:"→";font-size:20px;color:#6CC04A}.msheet>a.btn{justify-content:center;border:0}.msheet>a.btn::after{content:none}
+  .msheet.open>a{transform:none;opacity:1}
+  .msheet.open>a:nth-of-type(1){transition-delay:0.04s}.msheet.open>a:nth-of-type(2){transition-delay:0.09s}.msheet.open>a:nth-of-type(3){transition-delay:0.14s}.msheet.open>a:nth-of-type(4){transition-delay:0.19000000000000003s}.msheet.open>a:nth-of-type(5){transition-delay:0.24000000000000002s}
+  .mfoot{display:grid;gap:4px;margin-top:26px}
+  .mfoot a{display:flex;align-items:center;min-height:44px;font-family:"Fira Code",ui-monospace,monospace;font-size:14px;color:rgba(226,236,252,.74)}
+  .msheet .btn{margin-top:18px;height:52px;font-size:16px}
+}
+@media (max-width:820px){
+
+  #hero{height:100svh}
+  .chip{font-size:11.5px;height:26px}
+  .tag,.note,.code header,.code footer,.fgrid h6,.side h6,.tbl .th,.search kbd,.legal{font-size:12px}
+  .kpi small,.seg span,.lg,.bars p,.av,.tbl>div{font-size:12px}
+  #typed{font-size:11.5px}
+  .pk .top,.pk .eb,.meta small,.rc .tag{font-size:12px}
+  .fgrid ul{gap:0}.fgrid li a,.legal a{display:inline-flex;align-items:center;min-height:42px}
+  .tlink{min-height:44px}
+  .pill.dark{height:44px}
+
+}
 </style>
 </head>
 <body id="top">
@@ -310,9 +342,18 @@ footer.f{margin-top:auto;padding-top:calc(150*var(--u))}
   <div class="right">
     <a class="plain" href="tel:+97147034555">Call us</a>
     <a class="pill grey" href="#contact">Contact</a>
-    <a class="pill dark" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a>
+    <a class="pill dark" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a><button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="msheet"><span></span><span></span></button>
   </div>
 </header>
+<div class="msheet" id="msheet" role="dialog" aria-modal="true" aria-label="Menu">
+  <a href="#services">Services</a>
+  <a href="#why">Why FinRidge</a>
+  <a href="#about">About Us</a>
+  <a href="#careers">Careers</a>
+  <a href="#contact">Contact</a>
+  <div class="mfoot"><a href="tel:+97147034555">+971 4703 4555</a><a href="mailto:info@finridge.net">info@finridge.net</a></div>
+  <a class="btn fill" href="mailto:info@finridge.net?subject=Quote%20request">Get a Quote</a>
+</div>
 
 <main>
 <!-- HERO -->
@@ -737,6 +778,29 @@ addEventListener('load', poses);
 if (R) addEventListener('scroll', render, { passive: true });
 else (function loop(n){ requestAnimationFrame(loop); frame(n); })(performance.now());
 poses();
+</script>
+
+<script>
+(function(){
+  var b = document.getElementById('burger'), s = document.getElementById('msheet');
+  function set(o){
+    b.classList.toggle('open', o); s.classList.toggle('open', o);
+    b.setAttribute('aria-expanded', o); b.setAttribute('aria-label', o ? 'Close menu' : 'Open menu');
+    document.body.style.overflow = o ? 'hidden' : '';
+    if (window.__lenis){ o ? window.__lenis.stop() : window.__lenis.start(); }
+  }
+  b.addEventListener('click', function(){ set(!s.classList.contains('open')); });
+  s.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var hash = a.getAttribute('href');
+      set(false);
+      if (hash.charAt(0) === '#'){ e.preventDefault(); var t = document.querySelector(hash); if (!t) return;
+        if (window.__lenis){ window.__lenis.start(); window.__lenis.scrollTo(t, { offset: -20, force: true }); } else t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+    });
+  });
+  addEventListener('keydown', function(e){ if (e.key === 'Escape') set(false); });
+  addEventListener('resize', function(){ if (innerWidth > 820) set(false); });
+})();
 </script>
 </body>
 </html>
